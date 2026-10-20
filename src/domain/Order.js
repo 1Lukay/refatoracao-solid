@@ -1,3 +1,4 @@
+
 class Order {
   constructor(id, customer, items, couponCode, paymentMethod, installments) {
     this.id = id;
@@ -19,9 +20,7 @@ class Order {
   }
 
   getTotalWeight() {
-    return this.items.reduce((total, item) => {
-      return total + item.product.weight * item.quantity;
-    }, 0);
+    return this.items.reduce((total, item) => total + item.getWeight(), 0);
   }
 }
 

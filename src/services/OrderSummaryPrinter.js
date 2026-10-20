@@ -2,9 +2,9 @@
 class OrderSummaryPrinter {
   print(order, summary) {
     console.log("Resumo do pedido");
-    console.log(`Cliente: ${order.customer.name}`);
+    console.log(`Cliente: ${order.customer.getName()}`);
     console.log(
-      `Cidade: ${order.customer.address.city}/${order.customer.address.state}`
+      `Cidade: ${order.customer.getCity()}/${order.customer.getState()}`
     );
     console.log(`Itens: ${order.getTotalItems()}`);
     console.log(`Subtotal: R$ ${summary.subtotal.toFixed(2)}`);

@@ -1,18 +1,16 @@
 
-
-
 class OrderService {
   constructor({
-  productRepository,
-  orderRepository,
-  notificationService,
-  logger,
-  discountService,
-  shippingService,
-  paymentService,
-  orderValidator,
-  orderSummaryPrinter
-}) {
+    productRepository,
+    orderRepository,
+    notificationService,
+    logger,
+    discountService,
+    shippingService,
+    paymentService,
+    orderValidator,
+    orderSummaryPrinter
+  }) {
     this.productRepository = productRepository;
     this.orderRepository = orderRepository;
     this.notificationService = notificationService;
@@ -20,7 +18,6 @@ class OrderService {
     this.discountService = discountService;
     this.shippingService = shippingService;
     this.paymentService = paymentService;
-
     this.orderValidator = orderValidator;
     this.orderSummaryPrinter = orderSummaryPrinter;
   }
@@ -34,11 +31,10 @@ class OrderService {
 
     let discount = this.discountService.calculate(order, subtotal);
 
-    const paymentDiscount =
-      this.discountService.calculatePaymentDiscount(
-        order.paymentMethod,
-        subtotal
-      );
+    const paymentDiscount = this.discountService.calculatePaymentDiscount(
+      order.paymentMethod,
+      subtotal
+    );
 
     discount += paymentDiscount;
 
@@ -62,7 +58,10 @@ class OrderService {
     }
 
     for (const item of order.items) {
-      this.productRepository.updateStock(item.product.id, item.quantity);
+      this.productRepository.updateStock(
+        item.getProductId(),
+        item.quantity
+      );
     }
 
     order.status =
@@ -70,13 +69,13 @@ class OrderService {
 
     const orderSummary = {
       id: order.id,
-      customerName: order.customer.name,
-      customerEmail: order.customer.email,
-      city: order.customer.address.city,
-      state: order.customer.address.state,
+      customerName: order.customer.getName(),
+      customerEmail: order.customer.getEmail(),
+      city: order.customer.getCity(),
+      state: order.customer.getState(),
       items: order.items.map((item) => ({
-        productId: item.product.id,
-        name: item.product.name,
+        productId: item.getProductId(),
+        name: item.getProductName(),
         quantity: item.quantity,
         subtotal: item.getSubtotal()
       })),

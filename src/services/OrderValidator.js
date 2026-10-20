@@ -9,7 +9,12 @@ class OrderValidator {
       throw new Error("Cliente obrigatorio.");
     }
 
-    if (!order.customer.email || !order.customer.email.includes("@")) {
+    const email =
+      typeof order.customer.getEmail === "function"
+        ? order.customer.getEmail()
+        : order.customer.email;
+
+    if (!email || !email.includes("@")) {
       throw new Error("E-mail do cliente invalido.");
     }
 
@@ -26,10 +31,15 @@ class OrderValidator {
         throw new Error("Quantidade invalida.");
       }
 
-      const product = this.productRepository.findById(item.product.id);
+      const productId =
+        typeof item.getProductId === "function"
+          ? item.getProductId()
+          : item.product.id;
+
+      const product = this.productRepository.findById(productId);
 
       if (!product) {
-        throw new Error(`Produto ${item.product.id} nao encontrado.`);
+        throw new Error(`Produto ${productId} nao encontrado.`);
       }
 
       if (product.stock < item.quantity) {
